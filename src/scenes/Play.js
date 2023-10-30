@@ -10,6 +10,7 @@ class Play extends Phaser.Scene{
         this.load.image('gCloud','./assets/cloud.png');
         this.load.image('groundScroll','./assets/groundScroll.png');
         this.load.image('fog','./assets/fog.png');
+        this.load.image('spike','./assets/spike.png');
         this.load.spritesheet('playerWalk','./assets/spritesheet.png',{frameWidth:32 , frameHeight: 64});
     }
 
@@ -20,12 +21,20 @@ class Play extends Phaser.Scene{
         this.ACCELERATION = 500;
         this.MAX_JUMPS = 1;
         this.JUMP_VELOCITY = -400;
+        this.spikeAdd = false;
 
         this.ground = this.add.group();
+        this.spikes = this.add.group();
         this.sky = this.add.tileSprite(0,0,0,0,'sky').setOrigin(0,0);
         this.mountains = this.add.tileSprite(0,0,0,0,'mountains').setOrigin(0,0);
         this.clouds = this.add.tileSprite(0,0,0,0,'clouds').setOrigin(0,0);
         this.fog = this.add.tileSprite(0,480-128,0,0,'fog').setOrigin(0,0);
+        
+        //Sprites
+        /*this.spike = this.physics.add.sprite(640,Phaser.Math.Between((480-64),32),'spike');
+        this.spike.body.allowGravity = false;
+        this.spike.body.setImmovable(true);
+        this.spike.setVelocityX(-300);*/
         
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -55,6 +64,7 @@ class Play extends Phaser.Scene{
         })
         this.player.setCollideWorldBounds(true);
         this.physics.add.collider(this.player,this.ground);
+        this.physics.add.collider(this.player,this.spikes);
     }
 
     update(){
@@ -63,6 +73,18 @@ class Play extends Phaser.Scene{
         this.clouds.tilePositionX += 4;
         this.fog.tilePositionX += 4;
         this.groundScroll.tilePositionX += 10;
+
+        if(Phaser.Math.Between(0,100) == 2 && this.spikeAdd == false){
+            let height = Phaser.Math.Between(32,(480-164));
+            let num = Phaser.Math.Between(1,3);
+            for(let i = 0; i < num; i++){
+                let spike = this.spike = this.physics.add.sprite(640+(i*32),height,'spike');
+                this.spike.body.allowGravity = false;
+                this.spike.body.setImmovable(true);
+                this.spike.setVelocityX(-300);
+                this.spikes.add(spike)
+            }
+        }
 
         this.player.isGrounded = this.player.body.touching.down;
 	    if(this.player.isGrounded) {
