@@ -10,7 +10,6 @@ class Spikes extends Phaser.Physics.Arcade.Sprite {
         this.body.setImmovable(true);
     }
     update(){
-
         if(this.x <= 0 -this.width){
             this.reset();
         }

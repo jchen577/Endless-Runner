@@ -16,9 +16,11 @@ class Play extends Phaser.Scene{
 
     create(){
         this.physics.world.gravity.y = 1000;
+        this.gameOver = false;
 
         this.ground = this.add.group();
         this.spikesG = this.add.group({runChildUpdate:true});
+        this.spikesG = this.add.group();
         this.sky = this.add.tileSprite(0,0,0,0,'sky').setOrigin(0,0);
         this.mountains = this.add.tileSprite(0,0,0,0,'mountains').setOrigin(0,0);
         this.clouds = this.add.tileSprite(0,0,0,0,'clouds').setOrigin(0,0);
@@ -61,9 +63,12 @@ class Play extends Phaser.Scene{
         this.keys = this.input.keyboard.createCursorKeys();
 
         this.physics.add.collider(this.player,this.ground);
-        this.physics.add.collider(this.player,this.spikesG);
+        this.physics.add.collider(this.player,this.spikesG,(player1,gspike)=>{
+            this.player.destroy();
+            this.gameOver = true;
+        });
         
-        //setInterval(this.addSpikes(),1000);
+        //spawn a new set of spikes every second
         this.sTimer = this.time.addEvent({
             callback: this.addSpikes,
             callbackScope: this,
@@ -73,20 +78,22 @@ class Play extends Phaser.Scene{
     }
 
     update(){
-        //Moving the background tiles 
-        this.sky.tilePositionX +=1;
-        this.mountains.tilePositionX += 2;
-        this.clouds.tilePositionX += 4;
-        this.fog.tilePositionX += 4;
-        this.groundScroll.tilePositionX += 10;
-
-        //this.spikesG.preUpdate();
-        this.playerFSM.step();
-        //Spawn a new spike sprite occassionally
+        if(!this.gameOver){
+            //Moving the background tiles
+            this.sky.tilePositionX +=1;
+            this.mountains.tilePositionX += 2;
+            this.clouds.tilePositionX += 4;
+            this.fog.tilePositionX += 4;
+            this.groundScroll.tilePositionX += 10;
+            this.playerFSM.step();
+        }
+        else{
+            this.spikesG.clear(true,true);
+        }
     }
 
     addSpikes(){
-        let height = Phaser.Math.Between(32,(480-164));
+        let height = Phaser.Math.Between(164,(480-64));
         let num = Phaser.Math.Between(1,3);
             for(let i = 0; i < num; i++){
                 let spike = new Spikes(this,640+(i*32),height,'spike');
