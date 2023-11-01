@@ -11,6 +11,7 @@ class Play extends Phaser.Scene{
         this.load.image('groundScroll','./assets/groundScroll.png');
         this.load.image('fog','./assets/fog.png');
         this.load.image('spike','./assets/spike.png');
+        this.load.image('spike2','./assets/spike2.png');
         this.load.image('platform','./assets/platform.png');
         this.load.spritesheet('playerWalk','./assets/spritesheet.png',{frameWidth:32 , frameHeight: 64});
     }
@@ -21,7 +22,8 @@ class Play extends Phaser.Scene{
 
         this.ground = this.add.group();
         this.spikesG = this.add.group({runChildUpdate:true});
-        this.spikesG = this.add.group();
+        this.cloudsG = this.add.group({runChildUpdate:true});
+        this.platformG = this.add.group({runChildUpdate:true});
         this.sky = this.add.tileSprite(0,0,0,0,'sky').setOrigin(0,0);
         this.mountains = this.add.tileSprite(0,0,0,0,'mountains').setOrigin(0,0);
         this.clouds = this.add.tileSprite(0,0,0,0,'clouds').setOrigin(0,0);
@@ -63,32 +65,35 @@ class Play extends Phaser.Scene{
 
         this.keys = this.input.keyboard.createCursorKeys();
 
+        //set things that the player can collide with
         this.physics.add.collider(this.player,this.ground);
-        this.physics.add.collider(this.player,this.spikesG,(player1,gspike)=>{
+        this.physics.add.collider(this.player,this.platformG);
+        this.physics.add.collider(this.player,this.cloudsG);
+        this.physics.add.collider(this.player,this.spikesG,(player1,gspike)=>{//If player collides with spike, die
             this.player.destroy();
             this.gameOver = true;
             this.scene.start('gameOverScene')
         });
         
-        //spawn a new set of spikes every second
+        //spawn a new set of obejcts every second
         this.sTimer = this.time.addEvent({
-            callback: this.addSpikes,
+            callback: this.addObject,
             callbackScope: this,
-            delay: 1000, // 1000 = 1 second
+            delay: 500, // 1000 = 1 second
             loop: true,
         });
 
-        this.sTimer = this.time.addEvent({
+        /*this.sTimer2 = this.time.addEvent({
             callback: this.addPlatforms,
             callbackScope: this,
             startAt: 500,
             delay: 1000, // 1000 = 1 second
             loop: true,
-        });
+        });*/
     }
 
     update(){
-        if(!this.gameOver){
+        if(!this.gameOver){//Do only if the character is still alive
             //Moving the background tiles
             this.sky.tilePositionX +=1;
             this.mountains.tilePositionX += 2;
@@ -111,12 +116,37 @@ class Play extends Phaser.Scene{
             }
     }
     
+    addClouds(){
+        let height = Phaser.Math.Between(164,(480-64));
+        let num = Phaser.Math.Between(1,3);
+            for(let i = 0; i < num; i++){
+                let spike = new Platform(this,640+(i*32),height,'gCloud',0,-300);
+                this.cloudsG.add(spike);
+            }
+    }
+
     addPlatforms(){
         let height = Phaser.Math.Between(164,(480-64));
         let num = Phaser.Math.Between(1,3);
             for(let i = 0; i < num; i++){
                 let spike = new Platform(this,640+(i*32),height,'platform',0,-300);
-                //this.spikesG.add(spike);
+                spike.body.checkCollision.down = false;
+                spike.body.checkCollision.left = false;
+                spike.body.checkCollision.right = false;
+                this.platformG.add(spike);
             }
+    }
+
+    addObject(){
+        let randNum = Math.round(Math.random()*3);
+        if(randNum == 1){
+            this.addPlatforms();
+        }
+        else if(randNum == 2){
+            this.addSpikes();
+        }
+        else if(randNum ==3){
+            this.addClouds();
+        }
     }
 }

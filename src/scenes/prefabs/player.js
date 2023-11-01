@@ -4,8 +4,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this)           // add Hero to existing scene
         scene.physics.add.existing(this)   // add physics body to scene
 
-        this.body.setCollideWorldBounds(true);
+        this.body.setCollideWorldBounds(true);//Player collides with boundaries
 
+        //set player values
         this.directionx = 1;
         this.velocityS = 300;
         this.drag = 300;
@@ -16,7 +17,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.jumps = 2;
     }
 }
-class IdleState extends State {
+class IdleState extends State {//Player idel state
     enter(scene, hero) {
         //hero.setVelocity(0);
         hero.body.setDragX(hero.drag);
@@ -27,7 +28,7 @@ class IdleState extends State {
 
     execute(scene,hero){
         const { left, right, up } = scene.keys;
-
+        //transition to new states
         if(Phaser.Input.Keyboard.JustDown(up)) {
             this.stateMachine.transition('jump');
             return;
