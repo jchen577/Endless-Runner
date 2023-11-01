@@ -11,6 +11,7 @@ class Play extends Phaser.Scene{
         this.load.image('groundScroll','./assets/groundScroll.png');
         this.load.image('fog','./assets/fog.png');
         this.load.image('spike','./assets/spike.png');
+        this.load.image('platform','./assets/platform.png');
         this.load.spritesheet('playerWalk','./assets/spritesheet.png',{frameWidth:32 , frameHeight: 64});
     }
 
@@ -66,12 +67,21 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.player,this.spikesG,(player1,gspike)=>{
             this.player.destroy();
             this.gameOver = true;
+            this.scene.start('gameOverScene')
         });
         
         //spawn a new set of spikes every second
         this.sTimer = this.time.addEvent({
             callback: this.addSpikes,
             callbackScope: this,
+            delay: 1000, // 1000 = 1 second
+            loop: true,
+        });
+
+        this.sTimer = this.time.addEvent({
+            callback: this.addPlatforms,
+            callbackScope: this,
+            startAt: 500,
             delay: 1000, // 1000 = 1 second
             loop: true,
         });
@@ -96,8 +106,17 @@ class Play extends Phaser.Scene{
         let height = Phaser.Math.Between(164,(480-64));
         let num = Phaser.Math.Between(1,3);
             for(let i = 0; i < num; i++){
-                let spike = new Spikes(this,640+(i*32),height,'spike');
+                let spike = new Platform(this,640+(i*32),height,'spike',0,-300);
                 this.spikesG.add(spike);
+            }
+    }
+    
+    addPlatforms(){
+        let height = Phaser.Math.Between(164,(480-64));
+        let num = Phaser.Math.Between(1,3);
+            for(let i = 0; i < num; i++){
+                let spike = new Platform(this,640+(i*32),height,'platform',0,-300);
+                //this.spikesG.add(spike);
             }
     }
 }

@@ -1,11 +1,11 @@
-class Spikes extends Phaser.Physics.Arcade.Sprite {
+class Platform extends Phaser.Physics.Arcade.Sprite {
     
-    constructor(scene, x, y, texture, frame) {
+    constructor(scene, x, y, texture, frame,velocity) {
         super(scene, x, y, texture, frame);
         this.parentScene = scene;
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        this.setVelocityX(-300);
+        this.setVelocityX(velocity);
         this.body.allowGravity = false;
         this.body.setImmovable(true);
     }
