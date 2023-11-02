@@ -86,6 +86,7 @@ class Play extends Phaser.Scene{
             this.player.destroy();
             this.gameOver = true;
             this.sound.play('splat');
+            this.bgm.stop();
             this.scene.start('gameOverScene');
         });
 
@@ -136,6 +137,7 @@ class Play extends Phaser.Scene{
             if(this.player.x < 0){
                 this.player.destroy();
                 this.gameOver = true;
+                this.bgm.stop();
                 this.scene.start('gameOverScene');
                 this.sound.play('splat');
             }

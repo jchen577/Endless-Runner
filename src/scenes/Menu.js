@@ -15,16 +15,21 @@ class Menu extends Phaser.Scene{
     create(){
         this.add.image(game.config.width/2,game.config.height/2,'menu');
         this.cursors = this.input.keyboard.createCursorKeys();
+        this.keyC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
     }
 
     update(){
-        /*if(Phaser.Input.Keyboard.JustDown(cursors.C)){
+        if(Phaser.Input.Keyboard.JustDown(this.keyC)){
+            cTrack = true;
             this.scene.start('creditScene');
-        }*/
+        }else{
 
         this.input.keyboard.on('keydown', (event) => {
-            this.sound.play('click');
-            this.scene.start('playScene');
+            if(cTrack == true){
+                this.sound.play('click');
+                this.scene.start('playScene');
+            }
         });
+    }
     }
 }
