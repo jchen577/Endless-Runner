@@ -5,6 +5,11 @@ class Menu extends Phaser.Scene{
     
     preload(){
         this.load.image('menu','./assets/menu.png');
+        this.load.audio('backgroundM', './assets/backgroundM.mp3');
+        this.load.audio('click', './assets/click.mp3');
+        this.load.audio('fail', './assets/fail.mp3');
+        this.load.audio('jump', './assets/jump.mp3');
+        this.load.audio('splat', './assets/splat.mp3');
     }
     
     create(){
@@ -18,6 +23,7 @@ class Menu extends Phaser.Scene{
         }*/
 
         this.input.keyboard.on('keydown', (event) => {
+            this.sound.play('click');
             this.scene.start('playScene');
         });
     }

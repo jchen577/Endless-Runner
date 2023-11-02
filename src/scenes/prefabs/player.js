@@ -94,6 +94,7 @@ class JumpState extends State{
 	    }
 
         if(player.jumping) {
+            scene.sound.play('jump');
 	    	player.jumps--;
 	    	player.jumping = false;
 	    }

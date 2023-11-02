@@ -33,6 +33,15 @@ class Play extends Phaser.Scene{
         this.clouds = this.add.tileSprite(0,0,0,0,'clouds').setOrigin(0,0);
         this.fog = this.add.tileSprite(0,480-128,0,0,'fog').setOrigin(0,0);
         
+
+        this.bgm = this.sound.add('backgroundM', { 
+            mute: false,
+            volume: 0.1,
+            rate: 1,
+            loop: true 
+        });
+        this.bgm.play();
+
         //Sprites
         /*keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -76,6 +85,7 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.player,this.spikesG,(player1,gspike)=>{//If player collides with spike, die
             this.player.destroy();
             this.gameOver = true;
+            this.sound.play('splat');
             this.scene.start('gameOverScene');
         });
 
@@ -127,6 +137,7 @@ class Play extends Phaser.Scene{
                 this.player.destroy();
                 this.gameOver = true;
                 this.scene.start('gameOverScene');
+                this.sound.play('splat');
             }
         }
         else{

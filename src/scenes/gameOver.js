@@ -17,10 +17,12 @@ class GameOver extends Phaser.Scene{
 
     update(){
         if(Phaser.Input.Keyboard.JustDown(this.keyR)){
+            this.sound.play('click');
             this.scene.start('playScene');
         }
 
         if(Phaser.Input.Keyboard.JustDown(this.keyM)){
+            this.sound.play('click');
             this.scene.start('menuScene');
         }
     }
