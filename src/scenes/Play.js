@@ -19,6 +19,10 @@ class Play extends Phaser.Scene{
     create(){
         this.physics.world.gravity.y = 1000;
         this.gameOver = false;
+        this.score = 0;
+        this.speed = -300;
+        this.mult = 1;
+
 
         this.ground = this.add.group();
         this.spikesG = this.add.group({runChildUpdate:true});
@@ -72,8 +76,9 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.player,this.spikesG,(player1,gspike)=>{//If player collides with spike, die
             this.player.destroy();
             this.gameOver = true;
-            this.scene.start('gameOverScene')
+            this.scene.start('gameOverScene');
         });
+
         
         //spawn a new set of obejcts every second
         this.sTimer = this.time.addEvent({
@@ -83,13 +88,28 @@ class Play extends Phaser.Scene{
             loop: true,
         });
 
-        /*this.sTimer2 = this.time.addEvent({
-            callback: this.addPlatforms,
+        this.sTimer2 = this.time.addEvent({
+            callback: this.addScore,
             callbackScope: this,
             startAt: 500,
             delay: 1000, // 1000 = 1 second
             loop: true,
-        });*/
+        });
+
+        this.scoreConfig = {
+            fontFamily: 'Courier',
+            fontSize: '18px',
+            backgroundColor: '#ADD8E6',
+            color: '#000000',
+            align: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth:0,
+        }
+        this.scoreT = this.add.text(60, 20, `Score: ${this.score}`,this.scoreConfig).setOrigin(0.5);
+
     }
 
     update(){
@@ -101,6 +121,13 @@ class Play extends Phaser.Scene{
             this.fog.tilePositionX += 4;
             this.groundScroll.tilePositionX += 10;
             this.playerFSM.step();
+
+            this.scoreT.setText(`Score: ${this.score}`);
+            if(this.player.x < 0){
+                this.player.destroy();
+                this.gameOver = true;
+                this.scene.start('gameOverScene');
+            }
         }
         else{
             this.spikesG.clear(true,true);
@@ -111,7 +138,7 @@ class Play extends Phaser.Scene{
         let height = Phaser.Math.Between(164,(480-64));
         let num = Phaser.Math.Between(1,3);
             for(let i = 0; i < num; i++){
-                let spike = new Platform(this,640+(i*32),height,'spike',0,-300);
+                let spike = new Platform(this,640+(i*32),height,'spike',0,this.speed*this.mult);
                 this.spikesG.add(spike);
             }
     }
@@ -120,7 +147,7 @@ class Play extends Phaser.Scene{
         let height = Phaser.Math.Between(164,(480-64));
         let num = Phaser.Math.Between(1,3);
             for(let i = 0; i < num; i++){
-                let spike = new Platform(this,640+(i*32),height,'gCloud',0,-300);
+                let spike = new Platform(this,640+(i*32),height,'gCloud',0,this.speed*this.mult);
                 this.cloudsG.add(spike);
             }
     }
@@ -129,7 +156,7 @@ class Play extends Phaser.Scene{
         let height = Phaser.Math.Between(164,(480-64));
         let num = Phaser.Math.Between(1,3);
             for(let i = 0; i < num; i++){
-                let spike = new Platform(this,640+(i*32),height,'platform',0,-300);
+                let spike = new Platform(this,640+(i*32),height,'platform',0,this.speed*this.mult);
                 spike.body.checkCollision.down = false;
                 spike.body.checkCollision.left = false;
                 spike.body.checkCollision.right = false;
@@ -147,6 +174,13 @@ class Play extends Phaser.Scene{
         }
         else if(randNum ==3){
             this.addClouds();
+        }
+    }
+
+    addScore(){
+        this.score += 10;
+        if(this.score%100 == 0 && this.score > 100){
+            this.mult += 0.25;
         }
     }
 }

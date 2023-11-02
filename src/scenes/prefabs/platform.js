@@ -14,6 +14,9 @@ class Platform extends Phaser.Physics.Arcade.Sprite {
         if(this.x <= 0 -this.width){//If object leaves the screen, destroy it
             this.reset();
         }
+        if(this.y < 0 || this.y > game.config.height){
+            this.reset();
+        }
     }
     reset(){
         this.destroy();

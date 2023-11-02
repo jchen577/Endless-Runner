@@ -4,7 +4,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this)           // add Hero to existing scene
         scene.physics.add.existing(this)   // add physics body to scene
 
-        this.body.setCollideWorldBounds(true);//Player collides with boundaries
+        //this.body.setCollideWorldBounds(true);//Player collides with boundaries
 
         //set player values
         this.directionx = 1;
@@ -12,7 +12,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.drag = 300;
         this.acceleration = 500;
         this.MAX_JUMPS = 1;
-        this.JUMP_VELOCITY = -400;
+        this.JUMP_VELOCITY = -600;
         this.jumping = false;
         this.jumps = 2;
     }

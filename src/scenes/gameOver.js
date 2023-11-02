@@ -10,13 +10,18 @@ class GameOver extends Phaser.Scene{
     create(){
         this.add.image(game.config.width/2,game.config.height/2,'gameOver');
 
-        keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+        this.keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+        this.keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
 
     }
 
     update(){
-        if(Phaser.Input.Keyboard.JustDown(keyR)){
+        if(Phaser.Input.Keyboard.JustDown(this.keyR)){
             this.scene.start('playScene');
+        }
+
+        if(Phaser.Input.Keyboard.JustDown(this.keyM)){
+            this.scene.start('menuScene');
         }
     }
 }
