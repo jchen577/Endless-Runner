@@ -29,6 +29,10 @@ class Menu extends Phaser.Scene{
                 this.sound.play('click');
                 this.scene.start('playScene');
             }
+            this.clock = this.time.delayedCall(100,()=>{
+                cTrack = true;
+            });
+
         });
     }
     }
